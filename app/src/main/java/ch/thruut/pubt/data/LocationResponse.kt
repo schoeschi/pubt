@@ -6,4 +6,9 @@ import kotlinx.serialization.Serializable
 data class LocationResponse(val stations: List<Station>)
 
 @Serializable
-data class Station(val id: String? = null, val name: String)
+data class Station(
+    val coordinate: Coordinate,
+    val id: String,
+    val name: String,
+    val score: Int?
+)

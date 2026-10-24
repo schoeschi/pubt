@@ -20,4 +20,13 @@ class TransportRepository {
             url { parameters.append("query", query) }
         }.body()
     }
+
+    suspend fun getJourney(from: Station, to: Station): JourneyResponse {
+        return client.get("http://transport.opendata.ch/v1/connections") {
+            url {
+                parameters.append("from", from.name)
+                parameters.append("to", to.name)
+            }
+        }.body()
+    }
 }
