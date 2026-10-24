@@ -1,14 +1,12 @@
 package ch.thruut.pubt.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import ch.thruut.pubt.R
 
-@OptIn(ExperimentalTextApi::class)
 val GoogleSansFlex = FontFamily(
     Font(
         resId = R.font.google_sans_flex,
