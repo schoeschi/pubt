@@ -1,5 +1,8 @@
-package ch.thruut.pubt.data
+package ch.thruut.pubt.data.repository
 
+import ch.thruut.pubt.data.response.JourneyResponse
+import ch.thruut.pubt.data.response.LocationResponse
+import ch.thruut.pubt.data.response.Station
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO

@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.thruut.pubt.data.Connection
-import ch.thruut.pubt.data.Station
-import ch.thruut.pubt.data.TransportRepository
+import ch.thruut.pubt.data.repository.TransportRepository
+import ch.thruut.pubt.data.response.Connection
+import ch.thruut.pubt.data.response.Station
 import kotlinx.coroutines.launch
 
 class TransportViewModel(private val repository: TransportRepository = TransportRepository()) :

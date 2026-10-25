@@ -1,4 +1,4 @@
-package ch.thruut.pubt.data
+package ch.thruut.pubt.data.response
 
 import kotlinx.serialization.Serializable
 
