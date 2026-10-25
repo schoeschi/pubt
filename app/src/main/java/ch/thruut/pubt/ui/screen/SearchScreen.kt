@@ -26,7 +26,7 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
         OutlinedTextField(
             value = uiState.searchQuery,
             label = { Text(text = "Search station") },
-            onValueChange = { viewModel.onSearchQueryChange(it) }
+            onValueChange = { viewModel.onSearchQueryChange(it) },
         )
 
         Button(
@@ -37,7 +37,7 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
         }
 
         uiState.stations.forEach { station ->
-            Text(station.name)
+            Text(text = station.name)
         }
     }
 }
