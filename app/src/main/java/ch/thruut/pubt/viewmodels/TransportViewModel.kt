@@ -1,44 +1,44 @@
 package ch.thruut.pubt.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.thruut.pubt.data.repository.TransportRepository
 import ch.thruut.pubt.data.response.Connection
 import ch.thruut.pubt.data.response.Station
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TransportViewModel(private val repository: TransportRepository = TransportRepository()) :
-    ViewModel() {
-    var stations by mutableStateOf<List<Station>>(emptyList())
-        private set
+data class TransportUiState(
+    val stations: List<Station> = emptyList(),
+    val journey: List<Connection> = emptyList(),
+    val selectedFrom: Station? = null,
+    val selectedTo: Station? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val searchQuery: String = "",
+)
 
-    var journey by mutableStateOf<List<Connection>>(emptyList())
-        private set
+class TransportViewModel(
+    private val repository: TransportRepository = TransportRepository()
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(TransportUiState())
+    val uiState: StateFlow<TransportUiState> = _uiState.asStateFlow()
 
-    fun searchStation(query: String) = viewModelScope.launch {
+    fun searchStation() = viewModelScope.launch {
+        val query = _uiState.value.searchQuery
         if (query.isBlank()) {
-            stations = emptyList()
+            _uiState.update { it.copy(stations = emptyList()) }
             return@launch
         }
-
-        try {
-            stations = repository.getLocations(query).stations
-        } catch (e: Exception) {
-            e.printStackTrace()
-            stations = emptyList()
-        }
+        val stations =
+            runCatching { repository.getLocations(query).stations }.getOrDefault(emptyList())
+        _uiState.update { it.copy(stations = stations) }
     }
 
-    fun findJourney(from: Station, to: Station) = viewModelScope.launch {
-        try {
-            val response = repository.getJourney(from, to)
-            journey = response.connections
-        } catch (e: Exception) {
-            e.printStackTrace()
-            journey = emptyList()
-        }
+    fun onSearchQueryChange(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
     }
 }
