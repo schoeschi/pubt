@@ -27,6 +27,7 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
             value = uiState.searchQuery,
             label = { Text(text = "Search station") },
             onValueChange = { viewModel.onSearchQueryChange(it) },
+            singleLine = true
         )
 
         Button(
