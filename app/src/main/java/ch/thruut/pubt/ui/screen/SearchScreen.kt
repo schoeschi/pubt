@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.visible
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -53,12 +54,13 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
+                .visible(uiState.stations.isEmpty())
         ) {
             Text(
                 text = "pubt",
@@ -88,7 +90,8 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 24.dp)
+                contentPadding = PaddingValues(bottom = 24.dp),
+                modifier = Modifier.weight(1f)
             ) {
                 items(uiState.stations, key = { it.id }) { station ->
                     StationItemCard(station = station)
