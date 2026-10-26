@@ -93,7 +93,7 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
                 contentPadding = PaddingValues(bottom = 24.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                items(uiState.stations, key = { it.id }) { station ->
+                items(uiState.stations) { station ->
                     StationItemCard(station = station)
                 }
             }

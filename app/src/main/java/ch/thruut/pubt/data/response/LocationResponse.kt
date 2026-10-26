@@ -8,7 +8,7 @@ data class LocationResponse(val stations: List<Station>)
 @Serializable
 data class Station(
     val coordinate: Coordinate,
-    val id: String,
+    val id: String? = null,
     val name: String,
     val score: Int?
 )
