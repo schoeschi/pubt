@@ -17,7 +17,6 @@ data class TransportUiState(
     val selectedFrom: Station? = null,
     val selectedTo: Station? = null,
     val isLoading: Boolean = false,
-    val error: String? = null,
     val searchQuery: String = "",
 )
 
@@ -28,6 +27,7 @@ class TransportViewModel(
     val uiState: StateFlow<TransportUiState> = _uiState.asStateFlow()
 
     fun searchStation() = viewModelScope.launch {
+        _uiState.update { it.copy(isLoading = true) }
         val query = _uiState.value.searchQuery
         if (query.isBlank()) {
             _uiState.update { it.copy(stations = emptyList()) }
@@ -35,7 +35,7 @@ class TransportViewModel(
         }
         val stations =
             runCatching { repository.getLocations(query).stations }.getOrDefault(emptyList())
-        _uiState.update { it.copy(stations = stations) }
+        _uiState.update { it.copy(stations = stations, isLoading = false) }
     }
 
     fun onSearchQueryChange(query: String) {

@@ -12,23 +12,23 @@ val googleSansFlex = FontFamily(
         resId = R.font.google_sans_flex,
         weight = FontWeight.Normal,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(400)
-        )
+            FontVariation.weight(400),
+        ),
     ),
     Font(
         resId = R.font.google_sans_flex,
         weight = FontWeight.Medium,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(500)
-        )
+            FontVariation.weight(500),
+        ),
     ),
     Font(
         resId = R.font.google_sans_flex,
         weight = FontWeight.Bold,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(700)
-        )
-    )
+            FontVariation.weight(700),
+        ),
+    ),
 )
 
 private val defaultTypography = Typography()
@@ -48,5 +48,5 @@ val Typography = Typography(
     bodySmall = defaultTypography.bodySmall.copy(fontFamily = googleSansFlex),
     labelLarge = defaultTypography.labelLarge.copy(fontFamily = googleSansFlex),
     labelMedium = defaultTypography.labelMedium.copy(fontFamily = googleSansFlex),
-    labelSmall = defaultTypography.labelSmall.copy(fontFamily = googleSansFlex)
+    labelSmall = defaultTypography.labelSmall.copy(fontFamily = googleSansFlex),
 )

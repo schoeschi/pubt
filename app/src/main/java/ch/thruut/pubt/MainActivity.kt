@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             PubtTheme(dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     Box(modifier = Modifier.safeDrawingPadding()) {
                         SearchScreen()
@@ -38,20 +38,20 @@ class MainActivity : ComponentActivity() {
 @Preview(
     name = "Light Mode",
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Preview(
     name = "Dark Mode",
     showBackground = true,
     showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Composable
 fun MainActivityPreview() {
     PubtTheme(dynamicColor = false) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             Box(modifier = Modifier.safeDrawingPadding()) {
                 SearchScreen()
