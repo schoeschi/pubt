@@ -17,8 +17,8 @@ import kotlin.time.Duration.Companion.milliseconds
 data class TransportUiState(
     val stations: List<Station> = emptyList(),
     val journey: List<Connection> = emptyList(),
-    val selectedFrom: Station? = null,
-    val selectedTo: Station? = null,
+    val selectedOrigin: Station? = null,
+    val selectedDestination: Station? = null,
     val isLoading: Boolean = false,
     val originQuery: String = "",
     val destinationQuery: String = "",
@@ -71,5 +71,25 @@ class TransportViewModel(
         val query =
             if (field == SearchField.ORIGIN) _uiState.value.originQuery else _uiState.value.destinationQuery
         searchStation(query)
+    }
+
+    fun onStationSelect(station: Station) {
+        if (_uiState.value.activeField == SearchField.ORIGIN) {
+            _uiState.update {
+                it.copy(
+                    selectedOrigin = station,
+                    originQuery = station.name,
+                    stations = emptyList()
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    selectedDestination = station,
+                    destinationQuery = station.name,
+                    stations = emptyList()
+                )
+            }
+        }
     }
 }

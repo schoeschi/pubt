@@ -1,5 +1,6 @@
 package ch.thruut.pubt.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -93,7 +94,10 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
                 modifier = Modifier.weight(1f)
             ) {
                 items(uiState.stations) { station ->
-                    StationItemCard(station = station)
+                    StationItemCard(
+                        station = station,
+                        onClick = { viewModel.onStationSelect(station) }
+                    )
                 }
             }
         }
@@ -158,13 +162,15 @@ fun StationTextField(
 }
 
 @Composable
-private fun StationItemCard(station: Station) {
+private fun StationItemCard(station: Station, onClick: () -> Unit) {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        )
+        ),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
