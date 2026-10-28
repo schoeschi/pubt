@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import ch.thruut.pubt.data.repository.TransportRepository
 import ch.thruut.pubt.data.response.Connection
 import ch.thruut.pubt.data.response.Station
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 data class TransportUiState(
     val stations: List<Station> = emptyList(),
@@ -17,20 +20,27 @@ data class TransportUiState(
     val selectedFrom: Station? = null,
     val selectedTo: Station? = null,
     val isLoading: Boolean = false,
-    val searchQuery: String = "",
+    val originQuery: String = "",
+    val destinationQuery: String = "",
+    val activeField: SearchField = SearchField.NONE,
 )
+
+enum class SearchField {
+    ORIGIN, DESTINATION, NONE
+}
 
 class TransportViewModel(
     private val repository: TransportRepository = TransportRepository()
 ) : ViewModel() {
+    private var searchJob: Job? = null
     private val _uiState = MutableStateFlow(TransportUiState())
+
     val uiState: StateFlow<TransportUiState> = _uiState.asStateFlow()
 
-    fun searchStation() = viewModelScope.launch {
+    fun searchStation(query: String) = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }
-        val query = _uiState.value.searchQuery
         if (query.isBlank()) {
-            _uiState.update { it.copy(stations = emptyList()) }
+            _uiState.update { it.copy(stations = emptyList(), isLoading = false) }
             return@launch
         }
         val stations =
@@ -38,7 +48,28 @@ class TransportViewModel(
         _uiState.update { it.copy(stations = stations, isLoading = false) }
     }
 
-    fun onSearchQueryChange(query: String) {
-        _uiState.update { it.copy(searchQuery = query) }
+    fun onOriginQueryChange(query: String) {
+        _uiState.update { it.copy(originQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500.milliseconds)
+            searchStation(query)
+        }
+    }
+
+    fun onDestinationQueryChange(query: String) {
+        _uiState.update { it.copy(destinationQuery = query) }
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500.milliseconds)
+            searchStation(query)
+        }
+    }
+
+    fun onFieldFocused(field: SearchField) {
+        _uiState.update { it.copy(activeField = field) }
+        val query =
+            if (field == SearchField.ORIGIN) _uiState.value.originQuery else _uiState.value.destinationQuery
+        searchStation(query)
     }
 }
