@@ -74,16 +74,14 @@ class TransportViewModel(
     }
 
     fun onStationSelect(station: Station) {
-        if (_uiState.value.activeField == SearchField.ORIGIN) {
-            _uiState.update {
+        _uiState.update {
+            if (it.activeField == SearchField.ORIGIN) {
                 it.copy(
                     selectedOrigin = station,
                     originQuery = station.name,
                     stations = emptyList()
                 )
-            }
-        } else {
-            _uiState.update {
+            } else {
                 it.copy(
                     selectedDestination = station,
                     destinationQuery = station.name,

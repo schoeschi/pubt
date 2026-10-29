@@ -34,9 +34,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,7 +52,11 @@ import ch.thruut.pubt.viewmodels.TransportViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
+fun SearchScreen(
+    viewModel: TransportViewModel = viewModel(),
+    focusManager: FocusManager = LocalFocusManager.current,
+    destinationFocus: FocusRequester = remember { FocusRequester() }
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
@@ -96,7 +105,14 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
                 items(uiState.stations) { station ->
                     StationItemCard(
                         station = station,
-                        onClick = { viewModel.onStationSelect(station) }
+                        onClick = {
+                            viewModel.onStationSelect(station)
+                            if (uiState.activeField == SearchField.ORIGIN) {
+                                destinationFocus.requestFocus()
+                            } else {
+                                focusManager.clearFocus()
+                            }
+                        }
                     )
                 }
             }
@@ -114,6 +130,7 @@ fun SearchScreen(viewModel: TransportViewModel = viewModel()) {
             label = "Destination station",
             onValueChange = viewModel::onDestinationQueryChange,
             onFocus = { viewModel.onFieldFocused(SearchField.DESTINATION) },
+            modifier = Modifier.focusRequester(destinationFocus)
         )
     }
 }
@@ -123,12 +140,13 @@ fun StationTextField(
     query: String,
     label: String,
     onValueChange: (String) -> Unit,
-    onFocus: () -> Unit
+    onFocus: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = query,
         onValueChange = onValueChange,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { if (it.isFocused) onFocus() },
         label = { Text(label) },
