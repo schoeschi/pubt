@@ -11,7 +11,7 @@ kotlin = "2.4.21"
 composeBom = "2026.09.00"
 material3 = "1.5.0-beta02"
 lifecycleViewmodelCompose = "2.11.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
