@@ -58,7 +58,8 @@ import ch.thruut.pubt.viewmodels.TransportViewModel
 fun SearchScreen(
     viewModel: TransportViewModel = viewModel(),
     focusManager: FocusManager = LocalFocusManager.current,
-    destinationFocus: FocusRequester = remember { FocusRequester() }
+    destinationFocus: FocusRequester = remember { FocusRequester() },
+    onSearchClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -137,7 +138,7 @@ fun SearchScreen(
         )
 
         Button(
-            onClick = {},
+            onClick = { onSearchClick() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),

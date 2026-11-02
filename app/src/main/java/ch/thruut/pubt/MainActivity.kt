@@ -13,8 +13,33 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import ch.thruut.pubt.ui.screen.ResultsScreen
 import ch.thruut.pubt.ui.screen.SearchScreen
 import ch.thruut.pubt.ui.theme.PubtTheme
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "search"
+    ) {
+        composable("search") {
+            SearchScreen(
+                onSearchClick = {
+                    navController.navigate("results")
+                }
+            )
+        }
+        composable("results") {
+            ResultsScreen(onBackClick = { navController.popBackStack() })
+        }
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     Box(modifier = Modifier.safeDrawingPadding()) {
-                        SearchScreen()
+                        AppNavigation()
                     }
                 }
             }
@@ -54,7 +79,7 @@ fun MainActivityPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             Box(modifier = Modifier.safeDrawingPadding()) {
-                SearchScreen()
+                AppNavigation()
             }
         }
     }
