@@ -138,7 +138,10 @@ fun SearchScreen(
         )
 
         Button(
-            onClick = { onSearchClick() },
+            onClick = {
+                focusManager.clearFocus()
+                onSearchClick()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
