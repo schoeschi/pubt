@@ -48,6 +48,24 @@ class TransportViewModel(
         _uiState.update { it.copy(stations = stations, isLoading = false) }
     }
 
+    fun searchJourney() = viewModelScope.launch {
+        val origin = _uiState.value.selectedOrigin ?: return@launch
+        val destination = _uiState.value.selectedDestination ?: return@launch
+
+        _uiState.update { it.copy(isLoading = true) }
+
+        val connections = runCatching {
+            repository.getJourney(origin, destination).connections
+        }.getOrDefault(emptyList())
+
+        _uiState.update {
+            it.copy(
+                journey = connections,
+                isLoading = false
+            )
+        }
+    }
+
     fun onOriginQueryChange(query: String) {
         _uiState.update { it.copy(originQuery = query) }
         searchJob?.cancel()

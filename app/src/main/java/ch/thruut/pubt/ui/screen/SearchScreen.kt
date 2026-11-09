@@ -36,7 +36,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,22 +46,22 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.thruut.pubt.data.response.Station
 import ch.thruut.pubt.viewmodels.SearchField
-import ch.thruut.pubt.viewmodels.TransportViewModel
+import ch.thruut.pubt.viewmodels.TransportUiState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchScreen(
-    viewModel: TransportViewModel = viewModel(),
     focusManager: FocusManager = LocalFocusManager.current,
     destinationFocus: FocusRequester = remember { FocusRequester() },
+    uiState: TransportUiState,
+    onOriginQueryChange: (String) -> Unit,
+    onDestinationQueryChange: (String) -> Unit,
+    onFieldFocused: (SearchField) -> Unit,
+    onStationSelect: (Station) -> Unit,
     onSearchClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -110,7 +109,7 @@ fun SearchScreen(
                     StationItemCard(
                         station = station,
                         onClick = {
-                            viewModel.onStationSelect(station)
+                            onStationSelect(station)
                             if (uiState.activeField == SearchField.ORIGIN) {
                                 destinationFocus.requestFocus()
                             } else {
@@ -125,15 +124,15 @@ fun SearchScreen(
         StationTextField(
             query = uiState.originQuery,
             label = "Origin station",
-            onValueChange = viewModel::onOriginQueryChange,
-            onFocus = { viewModel.onFieldFocused(SearchField.ORIGIN) },
+            onValueChange = onOriginQueryChange,
+            onFocus = { onFieldFocused(SearchField.ORIGIN) },
         )
 
         StationTextField(
             query = uiState.destinationQuery,
             label = "Destination station",
-            onValueChange = viewModel::onDestinationQueryChange,
-            onFocus = { viewModel.onFieldFocused(SearchField.DESTINATION) },
+            onValueChange = onDestinationQueryChange,
+            onFocus = { onFieldFocused(SearchField.DESTINATION) },
             modifier = Modifier.focusRequester(destinationFocus)
         )
 

@@ -15,18 +15,24 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ch.thruut.pubt.ui.screen.ResultsScreen
 import ch.thruut.pubt.ui.screen.SearchScreen
 import ch.thruut.pubt.ui.theme.PubtTheme
+import ch.thruut.pubt.viewmodels.TransportViewModel
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val viewModel: TransportViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
@@ -38,13 +44,22 @@ fun AppNavigation() {
     ) {
         composable("search") {
             SearchScreen(
+                uiState = uiState,
+                onOriginQueryChange = viewModel::onOriginQueryChange,
+                onDestinationQueryChange = viewModel::onDestinationQueryChange,
+                onFieldFocused = viewModel::onFieldFocused,
+                onStationSelect = viewModel::onStationSelect,
                 onSearchClick = {
                     navController.navigate("results")
+                    viewModel.searchJourney()
                 }
             )
         }
         composable("results") {
-            ResultsScreen(onBackClick = { navController.popBackStack() })
+            ResultsScreen(
+                onBackClick = { navController.popBackStack() },
+                uiState = uiState
+            )
         }
     }
 }

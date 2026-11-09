@@ -9,22 +9,18 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ch.thruut.pubt.viewmodels.TransportViewModel
+import ch.thruut.pubt.viewmodels.TransportUiState
 
 @Composable
 fun ResultsScreen(
-    viewModel: TransportViewModel = viewModel(),
+    uiState: TransportUiState,
     onBackClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,6 +33,12 @@ fun ResultsScreen(
                 contentDescription = "Search",
                 tint = MaterialTheme.colorScheme.primary
             )
+        }
+    }
+
+    Column {
+        uiState.journey.forEach { journey ->
+            Text(journey.from.station.name)
         }
     }
 }
